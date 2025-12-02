@@ -2,10 +2,10 @@
 
 int main() {
     InputFileStream in("../file");
-    OutputFileStream out("../compressed.txt");
+    OutputFileStream out("../compressed");
     Encode(in, out);
-    in.change_file("../compressed.txt");
-    out.change_file("../recovered.txt");
+    in.change_file("../compressed");
+    out.change_file("../recovered");
     Decode(in, out);
 
     return 0;

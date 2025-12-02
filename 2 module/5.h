@@ -5,7 +5,7 @@
 #include <string>
 
 
-typedef char byte;
+typedef unsigned char byte;
 
 class IInputStream {
 public:
@@ -28,18 +28,30 @@ private:
     std::ifstream stream;
 public:
     InputFileStream(const std::string& file_name) {
-        stream.open(file_name);
+        stream.open(file_name, std::ios::binary);
     }
     ~InputFileStream() {
         stream.close();
     }
     void change_file(const std::string& file_name) {
         stream.close();
-        stream.open(file_name);
+        stream.clear();
+        stream.open(file_name, std::ios::binary);
     }
     virtual bool Read(byte& value) {
-        stream.get(value);
-        return !stream.eof();
+        char tmp;
+        if (!stream.get(tmp)) {
+            return false;
+        }
+        value = static_cast<unsigned char>(tmp);
+        return true;
+
+        // if (!stream.get(value))
+        //     return false;
+        // return true;
+
+        // stream.get(value);
+        // return !stream.eof();
     }
 };
 
@@ -48,17 +60,21 @@ private:
     std::ofstream stream;
 public:
     OutputFileStream(const std::string& file_name) {
-        stream.open(file_name);
+        stream.open(file_name, std::ios::binary);
     }
     ~OutputFileStream() {
         stream.close();
     }
     void change_file(const std::string& file_name) {
         stream.close();
-        stream.open(file_name);
+        stream.clear();
+        stream.open(file_name, std::ios::binary);
     }
     virtual void Write(byte value) {
-        stream.put(value);
+        char c = static_cast<char>(value);
+        stream.put(c);
+
+        // stream.put(value);
     }
     // write bit
 };
