@@ -3,4 +3,6 @@ project(vk_algo)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(vk_algo main.cpp)
+add_executable(vk_algo main.cpp
+        "2 module/5.cpp"
+        "2 module/5.h")

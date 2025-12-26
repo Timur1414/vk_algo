@@ -174,7 +174,7 @@ void Decode(IInputStream& compressed, IOutputStream& original) {
         cur_code += tmp;
         if (is_code_correct(cur_code)) {
             byte result = find_decoded_byte(cur_code);
-            std::cout << cur_code << " -> " << int(result) << std::endl;
+            // std::cout << cur_code << " -> " << int(result) << std::endl;
             original.Write(result);
             cur_code = "";
         }

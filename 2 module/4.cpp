@@ -144,9 +144,8 @@ private:
     Node<T>* recursive_add(Node<T>* node, int key, int& pos) {
         if (!node)
             return new Node<T>(key);
-        if (compare(key, node->key)) {
+        if (compare(key, node->key))
             node->left = recursive_add(node->left, key, pos);
-        }
         else {
             pos += get_count(node->left) + 1;
             node->right = recursive_add(node->right, key, pos);
@@ -158,12 +157,10 @@ private:
         if (!node)
             return nullptr;
         int left_count = get_count(node->left);
-        if (index < left_count) {
+        if (index < left_count)
             node->left = recursive_remove(node->left, index);
-        }
-        else if (index > left_count) {
+        else if (index > left_count)
             node->right = recursive_remove(node->right, index - left_count - 1);
-        }
         else {
             Node<T>* left_subtree = node->left;
             Node<T>* right_subtree = node->right;
@@ -185,16 +182,6 @@ private:
             return node->right;
         }
         node->left = find_and_remove_min(node->left, min_node);
-        return balance(node);
-    }
-
-    Node<T>* findMin(Node<T>* node) {
-        return node->left ? findMin(node->left) : node;
-    }
-    Node<T>* removeMin(Node<T>* node) {
-        if (!node->left)
-            return node->right;
-        node->left = removeMin(node->left);
         return balance(node);
     }
 public:
@@ -219,6 +206,7 @@ public:
 
 
 int main() {
+    // 4.1 Солдаты АВЛ.
     Compare compare;
     Tree<Compare> tree(compare);
     int n = 0;
@@ -230,9 +218,8 @@ int main() {
             int position = tree.add(height);
             std::cout << position << std::endl;
         }
-        else {
+        else
             tree.remove(height);
-        }
     }
 
     return 0;

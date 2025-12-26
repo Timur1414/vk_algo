@@ -140,20 +140,17 @@ public:
         new_node->parent = prev;
         count++;
     }
-    void in_order_show() {
+    void in_order_show(std::ostream& out) {
         if (root == nullptr)
             return;
         std::stack<Node<T>*> stack;
-        cur = root;
-        // prev = root;
-        stack.push(cur);
+        stack.push(root);
         while (!stack.empty()) {
             Node<T>* node = stack.top();
-            if (node->left && !node->left->visited) {
+            if (node->left && !node->left->visited)
                 stack.push(node->left);
-            }
             else {
-                std::cout << node->key << " ";
+                out << node->key << " ";
                 stack.pop();
                 node->visited = true;
                 if (node->right)
@@ -165,6 +162,7 @@ public:
 
 
 int main() {
+    // 2.1 Бинарное дерево с обходом in-order.
     Compare compare;
     Tree<Compare> tree(compare);
     int n = 0;
@@ -174,7 +172,7 @@ int main() {
         std::cin >> item;
         tree.add(item);
     }
-    tree.in_order_show();
+    tree.in_order_show(std::cout);
 
     return 0;
 }

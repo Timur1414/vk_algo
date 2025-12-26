@@ -92,26 +92,32 @@ template<typename T, typename H>
 class HashTable {
 private:
     int count;
+    int locked_count;
     std::vector<TableItem<T, H>> arr;
     const int INIT_SIZE = 8;
     H hasher1;
     H hasher2;
+
+    void resize_arr() {
+        std::vector<TableItem<T, H>> old_arr(std::move(arr));
+        if (locked_count * 4 >= old_arr.size() * 3)
+            arr.resize(old_arr.capacity() * 2);
+        else
+            arr.resize(old_arr.capacity());
+        count = 0;
+        locked_count = 0;
+        for (int i = 0; i < old_arr.size(); i++)
+            if (old_arr[i].state == locked) {
+                add_key(old_arr[i].key, old_arr[i].hash);
+            }
+    }
 public:
     HashTable(const H& hasher1, const H& hasher2) {
         arr.resize(INIT_SIZE);
         this->hasher1 = hasher1;
         this->hasher2 = hasher2;
         count = 0;
-    }
-
-    void resize_arr() {
-        std::vector<TableItem<T, H>> old_arr(std::move(arr));
-        arr.resize(old_arr.capacity() * 2);
-        count = 0;
-        for (int i = 0; i < old_arr.size(); i++)
-            if (old_arr[i].state == locked) {
-                add_key(old_arr[i].key, old_arr[i].hash);
-            }
+        locked_count = 0;
     }
 
     bool in(const T& key) const {
@@ -156,6 +162,7 @@ public:
         else
             arr[index].set_key(key, hash);
         count++;
+        locked_count++;
         return true;
     }
     bool delete_key(const T& key) {
@@ -168,6 +175,7 @@ public:
         while (i < arr.capacity() && arr[index].state != empty) {
             if (arr[index].state == locked && arr[index].key == key) {
                 arr[index].clear_key();
+                locked_count--;
                 return true;
             }
             i++;
@@ -179,6 +187,7 @@ public:
 
 
 int main() {
+    // 1.2 Хеш-таблица с пробированием в виде двойного хеширования.
     StringHasher hasher(71);
     StringHasher additional_hasher(137);
     HashTable<std::string, StringHasher> table(hasher, additional_hasher);
